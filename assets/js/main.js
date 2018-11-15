@@ -22,13 +22,19 @@ document.addEventListener("DOMContentLoaded", function() {
 	   return this.htmlCode;
 	}
 
+// Container renderSub
+
+	Container.prototype.renderSub = function() {
+	   return this.htmlCode;
+	}
+
 
 // Menu children Class Constructor Container
 
 	function Menu(my_id, my_class, my_items){
 	   Container.call(this);
 	   this.id = my_id;
-	   this.className = my_class;
+	   this.class = my_class;
 	   this.items = my_items;
 	}
 
@@ -42,32 +48,49 @@ document.addEventListener("DOMContentLoaded", function() {
 // Menu render
 
 	Menu.prototype.render = function(){
-		var result = "<ul class='"+this.className+"' id='"+this.id+"'>";
-		for(var item in this.items){
+		var result = "<ul class='"+ this.class +"' id='"+ this.id +"'>";
+
+		for(var item in this.items ){
 			if(this.items[item] instanceof MenuItem) {
-				result += this.items[item].render();
+				result += this.items[item].render(item);
+			}
+			else if (this.items[item] instanceof Menu) {
+				result += this.items[item].renderSub();
 			}
 		}
 		result += "</ul>";
 		return result;
 	}
 
+	Menu.prototype.renderSub = function(){
+		var result2 = '<li class="menu-item parent"><ul class="'+ this.class +'" id="'+ this.id +'">';
+
+		for( var item in this.items ){
+			if(this.items[item] instanceof MenuItem) {
+				result2 += this.items[item].render(item);
+			}
+			else if (this.items[item] instanceof Menu) {
+				result += this.items[item].renderSub();
+			}
+		}
+		result2 += "</ul></li>";
+		return result2;
+	}
 
 // Menu removeItem
 
-	Menu.prototype.removeItem = function(e) {
-	   MenuItem.prototype.removeItem(e);
+	Menu.prototype.removeItem = function(indexElement) {
+	   MenuItem.prototype.removeItem(indexElement);
 	}
 
 
 // MenuItem children Class Constructor Container
 
-	function MenuItem(my_href, my_name, item_count) {
+	function MenuItem(my_href, my_name) {
 	   Container.call(this);
 	   this.className = "menu-item";
 	   this.href = my_href;
 	   this.itemName = my_name;
-	   this.itemCount = item_count;
 	}
 
 
@@ -79,27 +102,36 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // MenuItem render
 
-	MenuItem.prototype.render = function() {
-		return '<li class="'+ this.className +'"><a href="'+ this.href +'">'+ this.itemName +'</a><span class="remove" id="'+ this.itemCount +'">X</span></li>';
+	MenuItem.prototype.render = function(item) {
+		return '<li class="'+ this.className +'"><a href="'+ this.href +'">'+ this.itemName +'</a><span class="remove" id="'+ item +'">X</span></li>';
 	}
+
+
 
 
 // MenuItem remove
 
-	MenuItem.prototype.removeItem = function(e) {
-		var elementRemove = e.target.id; 
-		delete m_items[elementRemove];
-		renderResult();
+	MenuItem.prototype.removeItem = function(indexElement) {
+		for (key in m_items2) {
+
+			if ( m_items2[key] instanceof MenuItem ) {
+				delete m_items2[indexElement];
+			}
+			else if ( m_items2[key] instanceof Menu ) {
+				delete m_items[indexElement];
+			}
+		}
 	}
 
 
 // Variable Menu Item
 
-	var m_item1 = new MenuItem("#", "Главная", 0);
-	var m_item2 = new MenuItem("#", "Каталог", 1);
-	var m_item3 = new MenuItem("#", "Галерея", 2);
-	var m_item4 = new MenuItem("#", "О нас", 3);
-	var m_item5 = new MenuItem("#", "Контакты", 4);
+	var m_item1 = new MenuItem("#", "Главная");
+	var m_item2 = new MenuItem("#", "Каталог");
+	var m_item3 = new MenuItem("#", "Галерея");
+	var m_item4 = new MenuItem("#", "О нас");
+	var m_item5 = new MenuItem("#", "Контакты");
+
 
 	var m_items = {
 		0: m_item1,
@@ -111,23 +143,36 @@ document.addEventListener("DOMContentLoaded", function() {
 
 	var menu = new Menu("my_menu", "My_class", m_items);
 
+	var m_items2 = {
+		5: m_item1,
+		6: m_item2,
+		7: m_item3,
+		8: m_item4,
+		9: m_item5,
+		10: menu
+	};
+
+	var menuWithSub = new Menu("my_menu2", "My_class2", m_items2);
 
 // Events
 
 	document.addEventListener('click',function(e) {
 
 		if (e.toElement.className == 'remove') { 
-			menu.removeItem(e);
+			menu.removeItem(e.target.id);
+			renderResult();
 		}	
 	});
 
 
 // Render result
 
-	var result = document.getElementById('result');
+	var result1 = document.getElementById('result-1');
+	var result2 = document.getElementById('result-2');
 
 	function renderResult() {
-		result.innerHTML = menu.render();
+		result1.innerHTML = menu.render();
+		result2.innerHTML = menuWithSub.render();
 	}
 
 	renderResult();
