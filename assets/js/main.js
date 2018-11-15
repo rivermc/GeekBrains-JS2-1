@@ -19,13 +19,13 @@ document.addEventListener("DOMContentLoaded", function() {
 // Container removeItem
 
 	Container.prototype.removeItem = function() {
-	   return this.htmlCode;
+	   return true;
 	}
 
 // Container renderSub
 
 	Container.prototype.renderSub = function() {
-	   return this.htmlCode;
+	   return true;
 	}
 
 
@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	}
 
 
-// insert link prototype Menu - Container
+// Insert link prototype Menu - Container
 
 	Menu.prototype = Object.create(Container.prototype);
 	Menu.prototype.constructor = Menu;
@@ -63,24 +63,24 @@ document.addEventListener("DOMContentLoaded", function() {
 	}
 
 	Menu.prototype.renderSub = function(){
-		var result2 = '<li class="menu-item parent"><ul class="'+ this.class +'" id="'+ this.id +'">';
+		var result = '<li class="menu-item parent"><ul class="'+ this.class +'" id="'+ this.id +'">';
 
 		for( var item in this.items ){
 			if(this.items[item] instanceof MenuItem) {
-				result2 += this.items[item].render(item);
+				result += this.items[item].render(item);
 			}
 			else if (this.items[item] instanceof Menu) {
 				result += this.items[item].renderSub();
 			}
 		}
-		result2 += "</ul></li>";
-		return result2;
+		result += "</ul></li>";
+		return result;
 	}
 
 // Menu removeItem
 
-	Menu.prototype.removeItem = function(indexElement) {
-	   MenuItem.prototype.removeItem(indexElement);
+	Menu.prototype.removeItem = function(indexElement, obj) {
+	   MenuItem.prototype.removeItem(indexElement, obj);
 	}
 
 
@@ -94,7 +94,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	}
 
 
-// insert link prototype MenuItem - Container
+// Insert link prototype MenuItem - Container
 
 	MenuItem.prototype = Object.create(Container.prototype);
 	MenuItem.prototype.constructor = MenuItem;
@@ -107,24 +107,28 @@ document.addEventListener("DOMContentLoaded", function() {
 	}
 
 
-
-
 // MenuItem remove
 
-	MenuItem.prototype.removeItem = function(indexElement) {
-		for (key in m_items2) {
+	MenuItem.prototype.removeItem = function(indexElement, obj) {
 
-			if ( m_items2[key] instanceof MenuItem ) {
-				delete m_items2[indexElement];
+		for (key in obj) {
+
+			if (obj[key] instanceof MenuItem  && key == indexElement) {
+				delete obj[indexElement];
 			}
-			else if ( m_items2[key] instanceof Menu ) {
-				delete m_items[indexElement];
+			else if (obj[key] instanceof Menu) {
+
+				for (keySub in obj[key].items) {
+					if (keySub == indexElement) {
+						delete obj[key].items[indexElement];
+					}
+				}
 			}
 		}
 	}
 
 
-// Variable Menu Item
+// Variable Menu First
 
 	var m_item1 = new MenuItem("#", "Главная");
 	var m_item2 = new MenuItem("#", "Каталог");
@@ -141,7 +145,10 @@ document.addEventListener("DOMContentLoaded", function() {
 		4: m_item5
 	};
 
-	var menu = new Menu("my_menu", "My_class", m_items);
+	var menu = new Menu("my_sub_menu", "My_class", m_items);
+
+
+// Variable Menu Second
 
 	var m_items2 = {
 		5: m_item1,
@@ -154,12 +161,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
 	var menuWithSub = new Menu("my_menu2", "My_class2", m_items2);
 
+
 // Events
 
 	document.addEventListener('click',function(e) {
 
 		if (e.toElement.className == 'remove') { 
-			menu.removeItem(e.target.id);
+			menu.removeItem(e.target.id, m_items2);
+			//e.target.parentNode.remove();
 			renderResult();
 		}	
 	});
