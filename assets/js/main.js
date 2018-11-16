@@ -251,9 +251,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
 /**
 * Вывод результатов гамбургера
-* 
-* @param arguments     Параметры гамбургера
-* @throws {HamburgerException}  При неправильном использовании
 */
 	
 	Hamburger.prototype.render = function ()  {
@@ -274,9 +271,6 @@ document.addEventListener("DOMContentLoaded", function() {
 /**
 * Добавить добавку к гамбургеру. Можно добавить несколько
 * добавок, при условии, что они разные.
-* 
-* @param topping     Тип добавки
-* @throws {HamburgerException}  При неправильном использовании
 */
 
 
@@ -298,18 +292,12 @@ document.addEventListener("DOMContentLoaded", function() {
 /**
 * Убрать добавку, при условии, что она ранее была 
  * добавлена.
- * 
- * @param topping   Тип добавки
- * @throws {HamburgerException}  При неправильном использовании
  */
 	Hamburger.prototype.removeTopping = function (topping)  {
 		this.topping.splice(this.topping.indexOf(topping), 1);
 	}
 /**
  * Получить список добавок.
- *
- * @return {Array} Массив добавленных добавок, содержит константы
- *                 Hamburger.TOPPING_*
  */
 	Hamburger.prototype.getToppings = function ()  {
 
@@ -325,9 +313,6 @@ document.addEventListener("DOMContentLoaded", function() {
 /**
 * Добавить добавку к гамбургеру. Можно добавить несколько
 * добавок, при условии, что они разные.
-* 
-* @param topping     Тип добавки
-* @throws {HamburgerException}  При неправильном использовании
 */
 
 
@@ -345,9 +330,6 @@ document.addEventListener("DOMContentLoaded", function() {
 /**
 * Добавить добавку к гамбургеру. Можно добавить несколько
 * добавок, при условии, что они разные.
-* 
-* @param topping     Тип добавки
-* @throws {HamburgerException}  При неправильном использовании
 */
 
 
@@ -366,9 +348,6 @@ document.addEventListener("DOMContentLoaded", function() {
 /**
 * Убрать добавку, при условии, что она ранее была 
  * добавлена.
- * 
- * @param stuffing   Тип добавки
- * @throws {HamburgerException}  При неправильном использовании
  */
 	Hamburger.prototype.removeStuffing = function (stuffing)  {
 
