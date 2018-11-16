@@ -246,7 +246,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	
 
 
-	var hamburg = new Hamburger(Hamburger.SIZE_SMALL);
+	var hamburg = new Hamburger();
 
 
 /**
@@ -257,13 +257,15 @@ document.addEventListener("DOMContentLoaded", function() {
 */
 	
 	Hamburger.prototype.render = function ()  {
-		var totalPrice = this.size.price + this.totalPriceStuffing + this.totalPriceTopping;
-		var totalCalr = this.size.calr + this.totalCalrStuffing + this.totalCalrTopping;
+		var self_price = (this.size) ? this.size.price : 0;
+		var self_calr = (this.size) ? this.size.calr : 0;
+		var totalPrice = self_price + this.totalPriceStuffing + this.totalPriceTopping;
+		var totalCalr = self_calr + this.totalCalrStuffing + this.totalCalrTopping;
 		var renderDiv = '<div id="render-result">';
-		renderDiv += '<div class="burger-price">Стоимость вашего бургера'+ this.size.price +' руб. В нем '+ this.size.calr +' килокаллорий</div>';
-		renderDiv += '<div class="burger-price">Добавлено добавок: '+ this.countStuffing +' Стоимость добавок'+ this.totalPriceStuffing +'руб. Энергетическая ценность '+ this.totalCalrStuffing +' килокаллорий</div>';
-		renderDiv += '<div class="burger-price">Добавлено приправок: '+ this.countTopping +' Стоимость приправок'+ this.totalPriceTopping +'руб. Энергетическая ценность '+ this.totalCalrTopping +' килокаллорий</div>';
-		renderDiv += '<div class="burger-price-total">Итого на сумму:'+ totalPrice +' руб. Энергетическая ценность вашего заказа '+ totalCalr +' килокаллорий</div>'; 
+		renderDiv += '<div class="burger-price">Стоимость вашего бургера: <span>'+ self_price +' руб.</span> В нем  <span>'+ self_calr +' ккаллорий </span></div>';
+		renderDiv += '<div class="burger-price">Добавлено добавок: <span>'+ this.countStuffing +' шт.</span> Стоимость добавок <span>'+ this.totalPriceStuffing +'руб.</span> Энергетическая ценность <span>'+ this.totalCalrStuffing +' ккаллорий</span></div>';
+		renderDiv += '<div class="burger-price">Добавлено приправок: <span>'+ this.countTopping +' шт.</span> Стоимость приправок <span>'+ this.totalPriceTopping +'руб.</span> Энергетическая ценность <span>'+ this.totalCalrTopping +' ккаллорий</span></div>';
+		renderDiv += '<div class="burger-price burger-price-total">Итого на сумму: <span>'+ totalPrice +' руб.</span> Энергетическая ценность вашего заказа <span>'+ totalCalr +' ккаллорий</span></div>'; 
 		renderDiv += '</div>';
 
 		return renderDiv;
@@ -278,13 +280,18 @@ document.addEventListener("DOMContentLoaded", function() {
 */
 
 
-Hamburger.prototype.addTopping = function (topping)  {
+Hamburger.prototype.addTopping = function (topping, e)  {
+		var toppingBtn = document.getElementById(e);
 
 		if (this.topping.indexOf(topping) == -1 ) {
 			this.topping.push(topping);
+			toppingBtn.classList.add("active");
+			
+
 		}
 		else {
 			this.removeTopping(topping);
+			toppingBtn.classList.remove("active");
 
 		}
 }
@@ -325,13 +332,36 @@ Hamburger.prototype.getSize = function ()  {
 */
 
 
-Hamburger.prototype.addStuffing = function (stuffing)  {
+Hamburger.prototype.addSize = function (sizeItem, e)  {
+		var sizeBtn = document.getElementById(e);
+		var parentBtn = sizeBtn.parentNode.getElementsByTagName('button');
+		for (var i = 0; i <= parentBtn.length - 1; i++) {
+			parentBtn[i].classList.remove("active");
+		}
+		sizeBtn.classList.add("active");
+		this.size = sizeItem;
+		HamburgerException('');
+		
+}
+/**
+* Добавить добавку к гамбургеру. Можно добавить несколько
+* добавок, при условии, что они разные.
+* 
+* @param topping     Тип добавки
+* @throws {HamburgerException}  При неправильном использовании
+*/
+
+
+Hamburger.prototype.addStuffing = function (stuffing, e)  {
+		var stuffingBtn = document.getElementById(e);
 
 		if (this.stuffing.indexOf(stuffing) == -1 ) {
 			this.stuffing.push(stuffing);
+			stuffingBtn.classList.add("active");
 		}
 		else {
 			this.removeStuffing(stuffing);
+			stuffingBtn.classList.remove("active");
 		}
 }
 /**
@@ -359,26 +389,40 @@ Hamburger.prototype.getStuffing = function ()  {
 
 Hamburger.prototype.calculatePrice = function () {
 
+	var totalPriceSize = this.size;
 
-	var totalPriceSize = this.size.price;
+	if (totalPriceSize === undefined) {
+		HamburgerException('Выберите размер бургера');
+	}
+	else {
+		totalPriceSize = this.size.price;
 
-	var totalTopping = this.getToppings();
-	this.totalPriceTopping = 0;
+		var totalTopping = this.getToppings();
+		this.totalPriceTopping = 0;
 
-	for (var i = 0; i < totalTopping.length; i++) {
-        this.totalPriceTopping += totalTopping[i].price;
-        this.countTopping = totalTopping.length;
-    }
+		for (var i = 0; i < totalTopping.length; i++) {
+	        this.totalPriceTopping += totalTopping[i].price;
+	        this.countTopping = totalTopping.length;
+	    }
+	    if (totalTopping.length == 0) {
+	    	this.countTopping = 0;
+	    }
 
-	var totalStuffing = this.getStuffing();
-	this.totalPriceStuffing = 0;
+		var totalStuffing = this.getStuffing();
+		this.totalPriceStuffing = 0;
 
-	for (var i = 0; i < totalStuffing.length; i++) {
-        this.totalPriceStuffing += totalStuffing[i].price;
-        this.countStuffing = totalStuffing.length;
-    }
+		for (var i = 0; i < totalStuffing.length; i++) {
+	        this.totalPriceStuffing += totalStuffing[i].price;
+	        this.countStuffing = totalStuffing.length;
+	    }
+	    if (totalStuffing.length == 0) {
+	    	this.countStuffing = 0;
+	    }
 
-    return totalPriceSize + this.totalPriceTopping + this.totalPriceStuffing;
+	    return totalPriceSize + this.totalPriceTopping + this.totalPriceStuffing;
+	}
+
+
 
 	
 }
@@ -387,24 +431,27 @@ Hamburger.prototype.calculatePrice = function () {
  * @return {Number} Калорийность в калориях
  */
 Hamburger.prototype.calculateCalories = function () {
+	var totalCalrSize = this.size;
+	if (totalCalrSize !== undefined) {
+		totalCalrSize = this.size.calr;
+		var totalCalrSize = this.size.calr;
 
-	var totalCalrSize = this.size.calr;
+		var totalTopping = this.getToppings();
+		this.totalCalrTopping = 0;
 
-	var totalTopping = this.getToppings();
-	this.totalCalrTopping = 0;
+		for (var i = 0; i < totalTopping.length; i++) {
+	        this.totalCalrTopping += totalTopping[i].calr;
+	    }
 
-	for (var i = 0; i < totalTopping.length; i++) {
-        this.totalCalrTopping += totalTopping[i].calr;
-    }
+		var totalStuffing = this.getStuffing();
+		this.totalCalrStuffing = 0;
 
-	var totalStuffing = this.getStuffing();
-	this.totalCalrStuffing = 0;
+		for (var i = 0; i < totalStuffing.length; i++) {
+	        this.totalCalrStuffing += totalStuffing[i].calr;
+	    }
 
-	for (var i = 0; i < totalStuffing.length; i++) {
-        this.totalCalrStuffing += totalStuffing[i].calr;
-    }
-
-    return totalCalrSize + this.totalCalrTopping + this.totalCalrStuffing;
+	    return totalCalrSize + this.totalCalrTopping + this.totalCalrStuffing;
+	}
 
 }
 /**
@@ -413,7 +460,8 @@ Hamburger.prototype.calculateCalories = function () {
  * @constructor 
  */
 	function HamburgerException (message) { 
-		console.log(message);
+		var error = document.getElementById('error_block');
+		error.innerHTML = message;
 	}
 
 
@@ -425,15 +473,15 @@ Hamburger.prototype.calculateCalories = function () {
 
 			switch(e.target.id) {
 			  case 'small': 
-			    hamburg.size = Hamburger.SIZE_SMALL;
+			  	hamburg.addSize(Hamburger.SIZE_SMALL, e.target.id);
 			    break;
 
 			  case 'big':
-			    hamburg.size = Hamburger.SIZE_LARGE;
+			  	hamburg.addSize(Hamburger.SIZE_LARGE, e.target.id);
 			    break;
 
 			  default:
-			    hamburg.size = Hamburger.SIZE_SMALL;
+			  	hamburg.addSize(Hamburger.SIZE_SMALL, e.target.id);
 			}
 
 		}
@@ -441,15 +489,15 @@ Hamburger.prototype.calculateCalories = function () {
 
 			switch(e.target.id) {
 			  case 'cheese': 
-			    hamburg.addStuffing(Hamburger.STUFFING_CHEESE);
+			    hamburg.addStuffing(Hamburger.STUFFING_CHEESE, e.target.id);
 			    break;
 
 			  case 'salad':
-			    hamburg.addStuffing(Hamburger.STUFFING_SALAD);
+			    hamburg.addStuffing(Hamburger.STUFFING_SALAD, e.target.id);
 			    break;
 
 			  case 'potato':
-			    hamburg.addStuffing(Hamburger.STUFFING_POTATO);
+			    hamburg.addStuffing(Hamburger.STUFFING_POTATO, e.target.id);
 			    break;
 
 			  default:
@@ -461,11 +509,11 @@ Hamburger.prototype.calculateCalories = function () {
 
 			switch(e.target.id) {
 			  case 'spice': 
-			    hamburg.addTopping(Hamburger.TOPPING_SPICE);
+			    hamburg.addTopping(Hamburger.TOPPING_SPICE, e.target.id);
 			    break;
 
 			  case 'maoy':
-			  	hamburg.addTopping(Hamburger.TOPPING_MAYO);
+			  	hamburg.addTopping(Hamburger.TOPPING_MAYO, e.target.id);
 			    break;
 
 			  default:
@@ -489,7 +537,6 @@ Hamburger.prototype.calculateCalories = function () {
 		result3.innerHTML = hamburg.render();
 	}
 
-	renderResultHamburger();
 
 
 
