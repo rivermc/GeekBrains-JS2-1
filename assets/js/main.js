@@ -168,8 +168,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 		if (e.toElement.className == 'remove') { 
 			menu.removeItem(e.target.id, m_items2);
-			//e.target.parentNode.remove();
-			renderResult();
+			renderResult(); //e.target.parentNode.remove();
 		}	
 	});
 
@@ -185,5 +184,343 @@ document.addEventListener("DOMContentLoaded", function() {
 	}
 
 	renderResult();
+
+
+
+
+
+
+
+
+
+/**
+* Класс, объекты которого описывают параметры гамбургера. 
+* 
+* @constructor
+* @param size        Размер
+* @param stuffing    Начинка
+* @throws {HamburgerException}  При неправильном использовании
+*/
+	function Hamburger(size, stuffing) {
+		this.size = size;
+		this.stuffing = [];
+		this.topping = [];
+		this.totalPriceTopping = 0;
+		this.totalPriceStuffing = 0;
+		this.totalCalrTopping = 0;
+		this.totalCalrStuffing = 0;
+		this.countTopping = 0;
+		this.countStuffing = 0;
+	} 
+
+
+/* Размеры, виды начинок и добавок */
+	Hamburger.SIZE_SMALL = {
+		'price' : 50,
+		'calr' : 20
+	};
+	Hamburger.SIZE_LARGE = {
+		'price' : 100,
+		'calr' : 40
+	};
+	Hamburger.STUFFING_CHEESE = {
+		'price' : 10,
+		'calr' : 20
+	};
+	Hamburger.STUFFING_SALAD = {
+		'price' : 20,
+		'calr' : 5
+	};
+	Hamburger.STUFFING_POTATO = {
+		'price' : 15,
+		'calr' : 10
+	};
+	Hamburger.TOPPING_MAYO = {
+		'price' : 15,
+		'calr' : 0
+	};
+	Hamburger.TOPPING_SPICE = {
+		'price' : 20,
+		'calr' : 5
+	};
+	
+
+
+	var hamburg = new Hamburger(Hamburger.SIZE_SMALL);
+
+
+/**
+* Вывод результатов гамбургера
+* 
+* @param arguments     Параметры гамбургера
+* @throws {HamburgerException}  При неправильном использовании
+*/
+	
+	Hamburger.prototype.render = function ()  {
+		var totalPrice = this.size.price + this.totalPriceStuffing + this.totalPriceTopping;
+		var totalCalr = this.size.calr + this.totalCalrStuffing + this.totalCalrTopping;
+		var renderDiv = '<div id="render-result">';
+		renderDiv += '<div class="burger-price">Стоимость вашего бургера'+ this.size.price +' руб. В нем '+ this.size.calr +' килокаллорий</div>';
+		renderDiv += '<div class="burger-price">Добавлено добавок: '+ this.countStuffing +' Стоимость добавок'+ this.totalPriceStuffing +'руб. Энергетическая ценность '+ this.totalCalrStuffing +' килокаллорий</div>';
+		renderDiv += '<div class="burger-price">Добавлено приправок: '+ this.countTopping +' Стоимость приправок'+ this.totalPriceTopping +'руб. Энергетическая ценность '+ this.totalCalrTopping +' килокаллорий</div>';
+		renderDiv += '<div class="burger-price-total">Итого на сумму:'+ totalPrice +' руб. Энергетическая ценность вашего заказа '+ totalCalr +' килокаллорий</div>'; 
+		renderDiv += '</div>';
+
+		return renderDiv;
+		
+	}
+/**
+* Добавить добавку к гамбургеру. Можно добавить несколько
+* добавок, при условии, что они разные.
+* 
+* @param topping     Тип добавки
+* @throws {HamburgerException}  При неправильном использовании
+*/
+
+
+Hamburger.prototype.addTopping = function (topping)  {
+
+		if (this.topping.indexOf(topping) == -1 ) {
+			this.topping.push(topping);
+		}
+		else {
+			this.removeTopping(topping);
+
+		}
+}
+/**
+* Убрать добавку, при условии, что она ранее была 
+ * добавлена.
+ * 
+ * @param topping   Тип добавки
+ * @throws {HamburgerException}  При неправильном использовании
+ */
+Hamburger.prototype.removeTopping = function (topping)  {
+
+	this.topping.splice(this.topping.indexOf(topping), 1);
+}
+/**
+ * Получить список добавок.
+ *
+ * @return {Array} Массив добавленных добавок, содержит константы
+ *                 Hamburger.TOPPING_*
+ */
+Hamburger.prototype.getToppings = function ()  {
+
+	return this.topping;
+}
+/**
+ * Узнать размер гамбургера
+ */
+Hamburger.prototype.getSize = function ()  {
+
+	return this.size;
+}
+/**
+* Добавить добавку к гамбургеру. Можно добавить несколько
+* добавок, при условии, что они разные.
+* 
+* @param topping     Тип добавки
+* @throws {HamburgerException}  При неправильном использовании
+*/
+
+
+Hamburger.prototype.addStuffing = function (stuffing)  {
+
+		if (this.stuffing.indexOf(stuffing) == -1 ) {
+			this.stuffing.push(stuffing);
+		}
+		else {
+			this.removeStuffing(stuffing);
+		}
+}
+/**
+* Убрать добавку, при условии, что она ранее была 
+ * добавлена.
+ * 
+ * @param stuffing   Тип добавки
+ * @throws {HamburgerException}  При неправильном использовании
+ */
+Hamburger.prototype.removeStuffing = function (stuffing)  {
+
+	this.stuffing.splice(this.stuffing.indexOf(stuffing), 1);
+}
+/**
+ * Узнать начинку гамбургера
+ */
+Hamburger.prototype.getStuffing = function ()  {
+
+	return this.stuffing;
+}
+/**
+ * Узнать цену гамбургера
+ * @return {Number} Цена в тугриках
+ */
+
+Hamburger.prototype.calculatePrice = function () {
+
+
+	var totalPriceSize = this.size.price;
+
+	var totalTopping = this.getToppings();
+	this.totalPriceTopping = 0;
+
+	for (var i = 0; i < totalTopping.length; i++) {
+        this.totalPriceTopping += totalTopping[i].price;
+        this.countTopping = totalTopping.length;
+    }
+
+	var totalStuffing = this.getStuffing();
+	this.totalPriceStuffing = 0;
+
+	for (var i = 0; i < totalStuffing.length; i++) {
+        this.totalPriceStuffing += totalStuffing[i].price;
+        this.countStuffing = totalStuffing.length;
+    }
+
+    return totalPriceSize + this.totalPriceTopping + this.totalPriceStuffing;
+
+	
+}
+/**
+ * Узнать калорийность
+ * @return {Number} Калорийность в калориях
+ */
+Hamburger.prototype.calculateCalories = function () {
+
+	var totalCalrSize = this.size.calr;
+
+	var totalTopping = this.getToppings();
+	this.totalCalrTopping = 0;
+
+	for (var i = 0; i < totalTopping.length; i++) {
+        this.totalCalrTopping += totalTopping[i].calr;
+    }
+
+	var totalStuffing = this.getStuffing();
+	this.totalCalrStuffing = 0;
+
+	for (var i = 0; i < totalStuffing.length; i++) {
+        this.totalCalrStuffing += totalStuffing[i].calr;
+    }
+
+    return totalCalrSize + this.totalCalrTopping + this.totalCalrStuffing;
+
+}
+/**
+ * Представляет информацию об ошибке в ходе работы с гамбургером. 
+ * Подробности хранятся в свойстве message.
+ * @constructor 
+ */
+	function HamburgerException (message) { 
+		console.log(message);
+	}
+
+
+// Events
+
+	document.addEventListener('click',function(e) {
+
+		if (e.target.parentNode.id == 'size') {
+
+			switch(e.target.id) {
+			  case 'small': 
+			    hamburg.size = Hamburger.SIZE_SMALL;
+			    break;
+
+			  case 'big':
+			    hamburg.size = Hamburger.SIZE_LARGE;
+			    break;
+
+			  default:
+			    hamburg.size = Hamburger.SIZE_SMALL;
+			}
+
+		}
+		else if (e.target.parentNode.id == 'stuffing') {
+
+			switch(e.target.id) {
+			  case 'cheese': 
+			    hamburg.addStuffing(Hamburger.STUFFING_CHEESE);
+			    break;
+
+			  case 'salad':
+			    hamburg.addStuffing(Hamburger.STUFFING_SALAD);
+			    break;
+
+			  case 'potato':
+			    hamburg.addStuffing(Hamburger.STUFFING_POTATO);
+			    break;
+
+			  default:
+			    hamburg.stuffing = '';
+			}
+
+		}
+		else if (e.target.parentNode.id == 'topping') {
+
+			switch(e.target.id) {
+			  case 'spice': 
+			    hamburg.addTopping(Hamburger.TOPPING_SPICE);
+			    break;
+
+			  case 'maoy':
+			  	hamburg.addTopping(Hamburger.TOPPING_MAYO);
+			    break;
+
+			  default:
+			    hamburg.addTopping();
+			}
+
+		}
+
+		hamburg.calculatePrice();	
+		hamburg.calculateCalories();	
+		renderResultHamburger();
+	});
+
+
+
+// Render result
+
+	var result3 = document.getElementById('result-3');
+
+	function renderResultHamburger() {
+		result3.innerHTML = hamburg.render();
+	}
+
+	renderResultHamburger();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 });

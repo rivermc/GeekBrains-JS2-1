@@ -18,26 +18,26 @@
 		<h2>2. Создать наследника класса Menu – новый класс должен уметь строить меню со вложенными пунктами, т.е с подменю.</h2>
 		<div id="result-2"></div>
 	</section>
+
+	<section class="homework-3">
+		<h2>3. Некая сеть фаст-фудов предлагает несколько видов гамбургеров.</h2>
+		<div id="size">
+			<button id='small'>Маленький гамбургер (50 рублей, 20 калорий)</button>
+			<button id='big'>Большой гамбургер (100 рублей, 40 калорий)</button>
+		</div>
+		<div id="stuffing">
+			<button id='cheese'>Добавить сыр (+10 рублей, +20 калорий)</button>
+			<button id='salad'>Добавить салат (+20 рублей, +5 калорий)</button>
+			<button id='potato'>Добавить картофель (+15 рублей, +10 калорий)</button>
+		</div>
+		<div id="topping">
+			<button id='spice'>Посыпать приправой (+15 рублей, 0 калорий)</button>
+			<button id='maoy'>Полить майонезом (+20 рублей, +5 калорий)</button>
+		</div>
+		<div id="result-3"></div>
+	</section>
 </main>
 
-
-
-
-
-
-
-<ol>
-<li>Некая сеть фаст-фудов предлагает несколько видов гамбургеров:</li>
-</ul>
-<p>маленький (50 рублей, 20 калорий);<br />большой (100 рублей, 40 калорий).</p>
-</li>
-</ol>
-<p>Гамбургер может быть с одним из нескольких видов начинок (обязательно):</p>
-<pre><code class="prettyprint">с сыром (+ 10 рублей, + 20 калорий);
-с салатом (+ 20 рублей, + 5 калорий);
-с картофелем (+ 15 рублей, + 10 калорий).
-</code></pre>
-<p>Дополнительно гамбургер можно посыпать приправой (+ 15 рублей, 0 калорий) и полить майонезом (+ 20 рублей, + 5 калорий).<br />Напишите программу, рассчитывающую стоимость и калорийность гамбургера. <br />Используйте ООП подход (подсказка: нужен класс Гамбургер, константы, методы для выбора опций и расчета нужных величин).<br />/**<br />* Класс, объекты которого описывают параметры гамбургера. <br />* <br />* @constructor<br />* @param size Размер<br />* @param stuffing Начинка<br />* @throws {HamburgerException} При неправильном использовании<br /><em>/<br />function Hamburger(size, stuffing) { ... } <br />/</em> Размеры, виды начинок и добавок <em>/<br />Hamburger.SIZE_SMALL = ...<br />Hamburger.SIZE_LARGE = ...<br />Hamburger.STUFFING_CHEESE = ...<br />Hamburger.STUFFING_SALAD = ...<br />Hamburger.STUFFING_POTATO = ...<br />Hamburger.TOPPING_MAYO = ...<br />Hamburger.TOPPING_SPICE = ...<br />/</em>*<br />* Добавить добавку к гамбургеру. Можно добавить несколько<br />* добавок, при условии, что они разные.<br />* <br />* @param topping Тип добавки<br />* @throws {HamburgerException} При неправильном использовании<br /><em>/<br />Hamburger.prototype.addTopping = function (topping) ...<br />/</em>*<br />* Убрать добавку, при условии, что она ранее была <br />* добавлена.<br />* <br />* @param topping Тип добавки<br />* @throws {HamburgerException} При неправильном использовании<br /><em>/<br />Hamburger.prototype.removeTopping = function (topping) ...<br />/</em>*<br />* Получить список добавок.<br />*<br />* @return {Array} Массив добавленных добавок, содержит константы<br />* Hamburger.TOPPING_*<br /><em>/<br />Hamburger.prototype.getToppings = function () ...<br />/</em>*<br />* Узнать размер гамбургера<br /><em>/<br />Hamburger.prototype.getSize = function () ...<br />/</em>*<br />* Узнать начинку гамбургера<br /><em>/<br />Hamburger.prototype.getStuffing = function () ...<br />/</em>*<br />* Узнать цену гамбургера<br />* @return {Number} Цена в тугриках<br /><em>/<br />Hamburger.prototype.calculatePrice = function () ...<br />/</em>*<br />* Узнать калорийность<br />* @return {Number} Калорийность в калориях<br /><em>/<br />Hamburger.prototype.calculateCalories = function () ...<br />/</em>*<br />* Представляет информацию об ошибке в ходе работы с гамбургером. <br />* Подробности хранятся в свойстве message.<br />* @constructor <br />*/<br />function HamburgerException (...) { ... }</p>
-	<script src="assets/js/main.js"></script>
+<script src="assets/js/main.js"></script>
 </body>
 </html>
