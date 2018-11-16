@@ -1,0 +1,101 @@
+@colorRed:#d60000;
+@colorBlue: #5252ec;
+@colorGreen: #08b947;
+
+body {
+	padding: 0;
+	margin: 0;
+}
+
+& h2 {
+	text-align: center;
+	font-size: 14pt;
+	text-transform: uppercase;
+}
+
+
+section {
+	padding: 50px;
+
+	&.homework-1, &.homework-2 {
+		
+		& ul {
+			padding: 20px;
+			display: table;
+
+			& li {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				width: 120px;
+				margin: 10px 0;
+
+				& a {
+					color: @colorBlue;
+
+				}
+
+				& span {
+
+					&.remove {
+						transition: all 0.4s linear;
+						background: @colorRed;
+						border-radius: 5px;
+						color: #fff;
+						padding: 5px 10px;
+						cursor: pointer;
+					
+
+						&:hover {
+							background: @colorBlue;
+						}
+					}
+
+				}
+			}
+		}
+	}
+
+	&.homework-3 {
+
+		& > div {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+
+			&#result-3 {
+				min-height: 200px;
+
+				& .burger-price {
+					text-align: center;
+					font-size: 12pt;
+					margin-bottom: 10px;
+
+					& span {
+						color: @colorRed;
+						font-weight: bold;
+					}
+				}
+
+			}
+		}
+
+		& button {
+			background: @colorRed;
+			color: #fff;
+			transition: all 0.4s linear;
+			padding: 10px 25px;
+			border-radius: 10px;
+			margin: 10px;
+			cursor: pointer;
+
+			&:hover {
+				background: @colorBlue;
+			}
+
+			&.active {
+				background: @colorGreen;				
+			}
+		}
+	}	
+}
