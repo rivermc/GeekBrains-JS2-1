@@ -280,7 +280,7 @@ document.addEventListener("DOMContentLoaded", function() {
 */
 
 
-Hamburger.prototype.addTopping = function (topping, e)  {
+	Hamburger.prototype.addTopping = function (topping, e)  {
 		var toppingBtn = document.getElementById(e);
 
 		if (this.topping.indexOf(topping) == -1 ) {
@@ -294,7 +294,7 @@ Hamburger.prototype.addTopping = function (topping, e)  {
 			toppingBtn.classList.remove("active");
 
 		}
-}
+	}
 /**
 * Убрать добавку, при условии, что она ранее была 
  * добавлена.
@@ -302,27 +302,26 @@ Hamburger.prototype.addTopping = function (topping, e)  {
  * @param topping   Тип добавки
  * @throws {HamburgerException}  При неправильном использовании
  */
-Hamburger.prototype.removeTopping = function (topping)  {
-
-	this.topping.splice(this.topping.indexOf(topping), 1);
-}
+	Hamburger.prototype.removeTopping = function (topping)  {
+		this.topping.splice(this.topping.indexOf(topping), 1);
+	}
 /**
  * Получить список добавок.
  *
  * @return {Array} Массив добавленных добавок, содержит константы
  *                 Hamburger.TOPPING_*
  */
-Hamburger.prototype.getToppings = function ()  {
+	Hamburger.prototype.getToppings = function ()  {
 
-	return this.topping;
-}
+		return this.topping;
+	}
 /**
  * Узнать размер гамбургера
  */
-Hamburger.prototype.getSize = function ()  {
+	Hamburger.prototype.getSize = function ()  {
 
-	return this.size;
-}
+		return this.size;
+	}
 /**
 * Добавить добавку к гамбургеру. Можно добавить несколько
 * добавок, при условии, что они разные.
@@ -332,7 +331,7 @@ Hamburger.prototype.getSize = function ()  {
 */
 
 
-Hamburger.prototype.addSize = function (sizeItem, e)  {
+	Hamburger.prototype.addSize = function (sizeItem, e)  {
 		var sizeBtn = document.getElementById(e);
 		var parentBtn = sizeBtn.parentNode.getElementsByTagName('button');
 		for (var i = 0; i <= parentBtn.length - 1; i++) {
@@ -341,8 +340,8 @@ Hamburger.prototype.addSize = function (sizeItem, e)  {
 		sizeBtn.classList.add("active");
 		this.size = sizeItem;
 		HamburgerException('');
-		
-}
+			
+	}
 /**
 * Добавить добавку к гамбургеру. Можно добавить несколько
 * добавок, при условии, что они разные.
@@ -352,7 +351,7 @@ Hamburger.prototype.addSize = function (sizeItem, e)  {
 */
 
 
-Hamburger.prototype.addStuffing = function (stuffing, e)  {
+	Hamburger.prototype.addStuffing = function (stuffing, e)  {
 		var stuffingBtn = document.getElementById(e);
 
 		if (this.stuffing.indexOf(stuffing) == -1 ) {
@@ -363,7 +362,7 @@ Hamburger.prototype.addStuffing = function (stuffing, e)  {
 			this.removeStuffing(stuffing);
 			stuffingBtn.classList.remove("active");
 		}
-}
+	}
 /**
 * Убрать добавку, при условии, что она ранее была 
  * добавлена.
@@ -371,89 +370,84 @@ Hamburger.prototype.addStuffing = function (stuffing, e)  {
  * @param stuffing   Тип добавки
  * @throws {HamburgerException}  При неправильном использовании
  */
-Hamburger.prototype.removeStuffing = function (stuffing)  {
+	Hamburger.prototype.removeStuffing = function (stuffing)  {
 
-	this.stuffing.splice(this.stuffing.indexOf(stuffing), 1);
-}
+		this.stuffing.splice(this.stuffing.indexOf(stuffing), 1);
+	}
 /**
  * Узнать начинку гамбургера
  */
-Hamburger.prototype.getStuffing = function ()  {
+	Hamburger.prototype.getStuffing = function ()  {
 
-	return this.stuffing;
-}
+		return this.stuffing;
+	}
 /**
  * Узнать цену гамбургера
  * @return {Number} Цена в тугриках
  */
 
-Hamburger.prototype.calculatePrice = function () {
+	Hamburger.prototype.calculatePrice = function () {
 
-	var totalPriceSize = this.size;
+		var totalPriceSize = this.size;
 
-	if (totalPriceSize === undefined) {
-		HamburgerException('Выберите размер бургера');
+		if (totalPriceSize === undefined) {
+			HamburgerException('Выберите размер бургера');
+		}
+		else {
+			totalPriceSize = this.size.price;
+
+			var totalTopping = this.getToppings();
+			this.totalPriceTopping = 0;
+
+			for (var i = 0; i < totalTopping.length; i++) {
+		        this.totalPriceTopping += totalTopping[i].price;
+		        this.countTopping = totalTopping.length;
+		    }
+		    if (totalTopping.length == 0) {
+		    	this.countTopping = 0;
+		    }
+
+			var totalStuffing = this.getStuffing();
+			this.totalPriceStuffing = 0;
+
+			for (var i = 0; i < totalStuffing.length; i++) {
+		        this.totalPriceStuffing += totalStuffing[i].price;
+		        this.countStuffing = totalStuffing.length;
+		    }
+		    if (totalStuffing.length == 0) {
+		    	this.countStuffing = 0;
+		    }
+
+		    return totalPriceSize + this.totalPriceTopping + this.totalPriceStuffing;
+		}
 	}
-	else {
-		totalPriceSize = this.size.price;
-
-		var totalTopping = this.getToppings();
-		this.totalPriceTopping = 0;
-
-		for (var i = 0; i < totalTopping.length; i++) {
-	        this.totalPriceTopping += totalTopping[i].price;
-	        this.countTopping = totalTopping.length;
-	    }
-	    if (totalTopping.length == 0) {
-	    	this.countTopping = 0;
-	    }
-
-		var totalStuffing = this.getStuffing();
-		this.totalPriceStuffing = 0;
-
-		for (var i = 0; i < totalStuffing.length; i++) {
-	        this.totalPriceStuffing += totalStuffing[i].price;
-	        this.countStuffing = totalStuffing.length;
-	    }
-	    if (totalStuffing.length == 0) {
-	    	this.countStuffing = 0;
-	    }
-
-	    return totalPriceSize + this.totalPriceTopping + this.totalPriceStuffing;
-	}
-
-
-
-	
-}
 /**
  * Узнать калорийность
  * @return {Number} Калорийность в калориях
  */
-Hamburger.prototype.calculateCalories = function () {
-	var totalCalrSize = this.size;
-	if (totalCalrSize !== undefined) {
-		totalCalrSize = this.size.calr;
-		var totalCalrSize = this.size.calr;
+	Hamburger.prototype.calculateCalories = function () {
+		var totalCalrSize = this.size;
+		if (totalCalrSize !== undefined) {
+			totalCalrSize = this.size.calr;
+			var totalCalrSize = this.size.calr;
 
-		var totalTopping = this.getToppings();
-		this.totalCalrTopping = 0;
+			var totalTopping = this.getToppings();
+			this.totalCalrTopping = 0;
 
-		for (var i = 0; i < totalTopping.length; i++) {
-	        this.totalCalrTopping += totalTopping[i].calr;
-	    }
+			for (var i = 0; i < totalTopping.length; i++) {
+		        this.totalCalrTopping += totalTopping[i].calr;
+		    }
 
-		var totalStuffing = this.getStuffing();
-		this.totalCalrStuffing = 0;
+			var totalStuffing = this.getStuffing();
+			this.totalCalrStuffing = 0;
 
-		for (var i = 0; i < totalStuffing.length; i++) {
-	        this.totalCalrStuffing += totalStuffing[i].calr;
-	    }
+			for (var i = 0; i < totalStuffing.length; i++) {
+		        this.totalCalrStuffing += totalStuffing[i].calr;
+		    }
 
-	    return totalCalrSize + this.totalCalrTopping + this.totalCalrStuffing;
+		    return totalCalrSize + this.totalCalrTopping + this.totalCalrStuffing;
+		}
 	}
-
-}
 /**
  * Представляет информацию об ошибке в ходе работы с гамбургером. 
  * Подробности хранятся в свойстве message.
